@@ -1,6 +1,6 @@
 {
   "name": "@marianfoo/ui5-cc-dayjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Custom Control to use dayjs",
   "keywords": [
     "ui5",
@@ -9,7 +9,7 @@
   "author": "marianfoo",
   "repository": {
     "type": "git",
-    "url": "you/ui5-cc-dayjs.git"
+    "url": "https://github.com/marianfoo/ui5-dayjs"
   },
   "license": "MIT",
   "dependencies": {
