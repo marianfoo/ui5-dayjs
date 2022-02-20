@@ -1,20 +1,14 @@
-# UI5 custom control `ui5-cc-dateformat`
+# UI5 custom control `ui5-cc-dayjs`
 
-(brief description)
+Usage of dayjs directly in a UI5 custom control.
 
 ## Install
 
 ```bash
-$> yarn add ui5-cc-dateformat
+$> yarn add @marianfoo/ui5-cc-dayjs
 # or
-$> npm install ui5-cc-dateformat
+$> npm install @marianfoo/ui5-cc-dayjs
 ```
-
-## Included controls
-
-- `(control)`: (description)
-  - properties: -
-  - aggregations: -
 
 ## Usage
 
@@ -25,7 +19,7 @@ $> npm install ui5-cc-dateformat
    "ui5": {
      "dependencies": [
        // ...
-       "ui5-cc-dateformat",
+       "ui5-cc-dayjs",
        // ...
      ]
    }
@@ -35,45 +29,36 @@ $> npm install ui5-cc-dateformat
 
    ```xml
    <mvc:View ... 
-           xmlns:dateformat="cc.dateformat"
+           xmlns:datejs="ui5-community.dayjs"
            ...>
-      <dateformat:Control />
+      <datejs:DayjsText id="dayjsControl" value="2014/12/30" inputFormat="yyyy/MM/dd" outputFormat="dd.MM.YYYY"/>
    </mvc:View>
    ```
 
 ## How it works
 
-(describe how it, well, works)
+Control is using dayjs behind the scenes.
+More interfaces from dayjs are coming.
 
-## Build time (in apps)
+## Api
 
-Use `ui5 build --all` to produce a deployable version of your app including `ui5-cc-dateformat` and its’ control(s).
+Control is inheriting from [`sap.m.Text`](https://ui5.sap.com/#/api/sap.m.Text). So you can use all of the properties and methods of `sap.m.Text`.
 
-Other than that, nothing specific to note for using `ui5-cc-dateformat` in builds in UI5 apps.
+### Properties
+ - value
+   - Input of date Format
+   - If it´s not ISO 8601, you have to use the inputFormat property
+ - inputFormat
+   - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
+ - outputFormat
+   - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
+ - language
+   - if the input format has language dependent values (like Month), you can use this property to set the language
 
-## Tests
+### Methods
 
-The `test` folder contains a minimal UI5 app requiring `ui5-cc-dateformat`.
-
-For testing manually, do:
-
-```bash
-$> yarn test:manual # runs ui5 serve
-# now point a browser to http://localhost:8080
-```
-
-The [livereload middleware](https://github.com/petermuessig/ui5-ecosystem-showcase/tree/master/packages/ui5-middleware-livereload) is included, so changes to the test app get reloaded immediately.
-
-A full automated test suite is setup with [Jest + puppeteer](https://jestjs.io/docs/en/puppeteer), starting `ui5 serve` and running all `/test/**/*.test.js` :
-
-```bash
-$> cd test/ui5-app
-$> yarn # for installing runtime dependencies
-$> cd ..
-$> yarn test
-# sample output:
- ...
-```
+- getDayjsObject
+  - returns dayjs Object
 
 ## License
 
