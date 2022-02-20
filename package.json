@@ -1,6 +1,6 @@
 {
   "name": "@marianfoo/ui5-cc-dayjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Custom Control to use dayjs",
   "keywords": [
     "ui5",
