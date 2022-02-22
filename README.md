@@ -54,7 +54,29 @@ Control is inheriting from [`sap.m.Text`](https://ui5.sap.com/#/api/sap.m.Text).
    - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
  - language
    - if the input format has language dependent values (like Month), you can use this property to set the language
+ - Manipulate
+   - currently support is only `Add`,`Subtract`, `Start of Time` and `End of Time`
+```xml
+   <mvc:View ... 
+           xmlns:datejs="ui5-community.dayjs"
+           ...>
+          <Label text="Add 1 Day" />
+          <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+          manipulate="{method: 'add',unit: 'day',amount: 1}"/>
 
+          <Label text="Substract 2 Month " />
+          <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+          manipulate="{method: 'subtract',unit: 'month',amount: 2}"/>
+
+          <Label text="Begin of Year" />
+          <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+          manipulate="{method: 'startOf',unit: 'year'}"/>
+
+          <Label text="End of Quarter" />
+          <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+          manipulate="{method: 'endOf',unit: 'quarter'}"/>
+   </mvc:View>
+   ```
 ### Methods
 
 - getDayjsObject
