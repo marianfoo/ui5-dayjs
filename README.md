@@ -11,6 +11,10 @@ With this custom control, you can use dayjs in your UI5 App.
  * get start/end of the week, month, year, etc.
  * automatic translation, if present use locale of Fiori Launchpad, if not present use browser language
 
+### Sample App with usage
+
+https://github.com/marianfoo/ui5-dayjs-sample/blob/main/uimodule/webapp/view/MainView.view.xml
+
 ## Install
 
 ```bash
