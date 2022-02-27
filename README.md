@@ -2,6 +2,15 @@
 
 Usage of dayjs directly in a UI5 custom control.
 
+## Features
+
+Dayjs is a JavaScript library for parsing, validating, and formatting dates.  
+With this custom control, you can use dayjs in your UI5 App.
+ * use custom input and output formats (i.e. input format `YYYY-MM-DD` and output format `We/May/2022`)
+ * manipulate your dates (i.e. add/remove days, months, years, etc.)
+ * get start/end of the week, month, year, etc.
+ * automatic translation, if present use locale of Fiori Launchpad, if not present use browser language
+
 ## Install
 
 ```bash
@@ -52,9 +61,7 @@ Control is inheriting from [`sap.m.Text`](https://ui5.sap.com/#/api/sap.m.Text).
    - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
  - outputFormat
    - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
- - language
-   - if the input format has language dependent values (like Month), you can use this property to set the language
- - Manipulate
+ - `m`anipulate
    - currently support is only `Add`,`Subtract`, `Start of Time` and `End of Time`
 ```xml
    <mvc:View ... 

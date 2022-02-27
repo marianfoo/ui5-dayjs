@@ -1,0 +1,34 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [0.0.5] - 2022-02-27
+### Added
+- added automatic loading of language from FLP or browser
+### Changed
+### Fixed
+
+
+## [0.0.4] - 2022-02-22
+### Added
+- added `manipulate` property to use `Add`,`Subtract`, `Start of Time` and `End of Time`
+### Changed
+### Fixed
+
+## [0.0.3] - 2022-02-20
+### Added
+### Changed
+- added GitHub Repo Link in package.json
+### Fixed
+
+## [0.0.2] - 2022-02-20
+### Added
+### Changed
+- Updated Readme
+### Fixed
+
+## [0.0.1] - 2022-02-20
+### Added
+- Initial release.
+### Changed
+### Fixed
