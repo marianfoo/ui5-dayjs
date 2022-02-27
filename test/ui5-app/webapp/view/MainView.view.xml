@@ -1,0 +1,80 @@
+<mvc:View controllerName="de.marianzeis.datelibsample.controller.MainView" 
+xmlns:mvc="sap.ui.core.mvc" 	
+xmlns:form="sap.ui.layout.form" 
+xmlns:datejs="ui5-community.dayjs"
+displayBlock="true" 
+xmlns="sap.m">
+    <Shell id="shell">
+        <App id="app">
+            <pages>
+                <Page id="page" title="{i18n>title}">
+                    <content>
+                        <Button press="onPress"></Button>
+                        <form:SimpleForm
+                        width="auto"
+                        class="sapUiResponsiveMargin"
+                        layout="ResponsiveGridLayout"
+                        editable="true"
+                        labelSpanL="3"
+                        labelSpanM="3"
+                        emptySpanL="4"
+                        emptySpanM="4"
+                        columnsL="1"
+                        columnsM="1"
+                        title="Input" >
+                        <form:content>
+                            <Label text="Value" />
+                            <Input placeholder="yyyy/MM/dd" value="{/date}" />
+                            <Label text="Input Format" />
+                            <Input placeholder="yyyy/MM/dd" value="{/inputFormat}" />
+                            <Link href="https://day.js.org/docs/en/parse/string-format" target="_blank" text="Documentation"></Link>
+                            <Label text="Output Format" />
+                            <Input placeholder="yyyy/MM/dd" value="{/outputFormat}" />
+                            <Link href="https://day.js.org/docs/en/parse/string-format" target="_blank" text="Documentation"></Link>
+                        </form:content>
+                    </form:SimpleForm>
+                
+                    <form:SimpleForm
+                        width="auto"
+                        class="sapUiResponsiveMargin"
+                        layout="ResponsiveGridLayout"
+                        labelSpanL="3"
+                        labelSpanM="3"
+                        emptySpanL="4"
+                        emptySpanM="4"
+                        columnsL="1"
+                        columnsM="1"
+                        title="Custom Dates" >
+                        <form:content>
+
+                            <Label text="Simple Test" />
+                            <datejs:DayjsText id="simple_test" value="01.01.2020" inputFormat="DD.MM.YYYY" outputFormat="DD.MM.YYYY"/>
+                
+                            <Label text="Use Form Above" />
+                            <datejs:DayjsText id="test" value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"/>
+
+                            <Label text="Add 1 Day" />
+                            <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+                            manipulate="{method: 'add',unit: 'day',amount: 1}"/>
+
+                            <Label text="Substract 2 Month " />
+                            <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+                            manipulate="{method: 'subtract',unit: 'month',amount: 2}"/>
+
+                            <Label text="Begin of Year" />
+                            <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+                            manipulate="{method: 'startOf',unit: 'year'}"/>
+
+                            <Label text="End of Quarter" />
+                            <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
+                            manipulate="{method: 'endOf',unit: 'quarter'}"/>
+                
+
+                        </form:content>
+                    </form:SimpleForm>
+                    </content>
+                </Page>
+            </pages>
+        </App>
+    </Shell>
+</mvc:View>

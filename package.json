@@ -17,5 +17,10 @@
   },
   "devDependencies": {
     "@ui5/cli": "^2.14.6"
+  },  
+  "scripts": {
+    "test": "jest",
+    "test:manual": "cd test/ui5-app && ui5 serve",
+    "release": "standard-version"
   }
 }

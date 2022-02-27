@@ -1,0 +1,37 @@
+{
+    "name": "ui5-app",
+    "version": "0.0.1",
+    "description": "UI5 test application using UI5 custom controls via npm",
+    "private": true,
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "@wdio/cli": "^7.16.16",
+        "@wdio/devtools-service": "^7.16.16",
+        "@wdio/local-runner": "^7.16.16",
+        "@wdio/mocha-framework": "^7.16.15",
+        "@wdio/spec-reporter": "^7.16.14",
+        "chromedriver": "^98.0.1",
+        "ui5-middleware-livereload": "^0.5.9",
+        "wdio-chromedriver-service": "^7.2.8",
+        "wdio-ui5-service": "^0.8.2",
+        "@ui5/cli": "^2.14.6",
+        "ui5-tooling-modules": "^0.2.1",
+        "dayjs": "^1.10.7"
+    },
+    "dependencies": {
+        "@marianfoo/ui5-cc-dayjs": "file:../../"
+        
+    },
+    "ui5": {
+        "dependencies": [
+            "ui5-middleware-livereload",
+            "ui5-tooling-modules",
+            "@marianfoo/ui5-cc-dayjs"
+        ]
+    },
+    "scripts": {
+        "wdio": "set HEADLESS=true && wdio run wdio.conf.js",
+        "start": "ui5 serve --config=ui5.yaml  --open index.html",
+        "start-flp": "ui5 serve --config=ui5.yaml --open 'test/flpSandbox.html'"
+    }
+}
