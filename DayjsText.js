@@ -1,16 +1,20 @@
 sap.ui.define(
   [
     "sap/m/Text",
+    "sap/base/util/ObjectPath",
     "dayjs/dayjs.min",
     "dayjs/plugin/customParseFormat",
-    "dayjs/plugin/utc",
+    "dayjs/plugin/utc"
   ],
-  (Text, dayjs, dayjsCustomParseFormat, dayjsUTC) => {
+  (Text, ObjectPath, dayjs, dayjsCustomParseFormat, dayjsUTC) => {
     return Text.extend("ui5-community.dateformat.DayjsText", {
+      ObjectPath: ObjectPath,
       dayjs: dayjs,
       dayjsCustomParseFormat: dayjsCustomParseFormat,
       dayjsUTC: dayjsUTC,
       _dayjsObject: null,
+      language: "en",
+      locale: null,
 
       metadata: {
         properties: {
@@ -19,10 +23,6 @@ sap.ui.define(
             defaultValue: "",
           },
           outputFormat: {
-            type: "string",
-            defaultValue: "",
-          },
-          language: {
             type: "string",
             defaultValue: "",
           },
@@ -41,6 +41,103 @@ sap.ui.define(
         },
       },
 
+      renderer: {
+        apiVersion: 2,
+        /**
+         * create the view layer
+         *
+         * @param {sap.ui.core.RenderManager} oRM Render Manager v2
+         * @param {sap.ui.core.Control} oControl this control
+         */
+
+        render(oRM, oControl) {
+          oControl.handleData(oControl)
+          sap.m.TextRenderer.render(oRM, oControl);
+        },
+      },
+
+      init: async function () {
+        this.promise2 = this.loadLocalPluginReturnPromise();
+        this.language = await this.promise2;
+        if (this.language === "undefined") {
+          var userLang = navigator.language || navigator.userLanguage; 
+          this.language = userLang.substring(0, 2).toLowerCase();
+        }
+        if(this.language !== "en") {
+        var locale = sap.ui.require("dayjs/locale/" + this.language);
+        this.dayjs.locale(locale)
+        }
+        sap.m.Text.prototype.init.apply(this);
+        this.rerender(this)
+      },
+
+      handleData : function(oControl) {
+        oControl.dayjs.extend(oControl.dayjsCustomParseFormat);
+        // set plugins
+        oControl._setPlugins(oControl);
+        // get dayjs object
+        var dayjsDate = oControl._inputToDayjs(oControl);
+        // manipulate dayjsobject
+        dayjsDate = oControl._manipulate(dayjsDate, oControl);
+        // set output format
+        oControl._setOutputFormat(dayjsDate, oControl);
+        // set dayjsobject to control
+        oControl._dayjsObject = dayjsDate;
+      },
+
+      loadLocalPluginReturnPromise: function () {
+        var oModel = new sap.ui.model.json.JSONModel();
+        sap.ui.getCore().setModel(oModel, "ui5-community.dateformat.DayjsText");
+        return new Promise((resolve, reject) => {
+          try {
+            var sCurrentLocale = sap.ui
+              .getCore()
+              .getConfiguration()
+              .getLanguage()
+              .substring(0, 2)
+              .toLowerCase();
+            sap.ui
+              .getCore()
+              .getModel("ui5-community.dateformat.DayjsText")
+              .setProperty("/promiseResolve", resolve);
+            sap.ui
+              .getCore()
+              .getModel("ui5-community.dateformat.DayjsText")
+              .setProperty("/language", sCurrentLocale);
+            sap.ui
+              .getCore()
+              .getModel("ui5-community.dateformat.DayjsText")
+              .setProperty("/promiseReject", reject);
+            sap.ui.require(
+              ["dayjs/locale/" + sCurrentLocale.toLowerCase()],
+              function (locale) {
+                var resolve = sap.ui
+                  .getCore()
+                  .getModel("ui5-community.dateformat.DayjsText")
+                  .getProperty("/promiseResolve");
+                var language = sap.ui
+                  .getCore()
+                  .getModel("ui5-community.dateformat.DayjsText")
+                  .getProperty("/language");
+                resolve(language);
+              },
+              function (locale) {
+                var reject = sap.ui
+                  .getCore()
+                  .getModel("ui5-community.dateformat.DayjsText")
+                  .getProperty("/promiseReject");
+                reject();
+              }
+            );
+          } catch (error) {
+            console.warn(
+              "language could not be determined, probably not in sap launchpad"
+            );
+            reject(error);
+          }
+        });
+      },
+
       /**
        * return dayjs object
        */
@@ -50,16 +147,18 @@ sap.ui.define(
 
       _manipulate: function (dayjsDate, oControl) {
         if (oControl.getManipulate()) {
-            var object = oControl.getManipulate();
-            var args;
-            if(object.hasOwnProperty("amount")){
-                args = [object.amount, object.unit];
-            }else {
-                args = [object.unit];
-            }
-            dayjsDate = oControl._executeFunctionByName(object.method,dayjsDate,args)
-            // oControl._executeFunctionByName('add',dayjsDate,[1,'day'])
-            console.log(oControl.getManipulate());
+          var object = oControl.getManipulate();
+          var args;
+          if (object.hasOwnProperty("amount")) {
+            args = [object.amount, object.unit];
+          } else {
+            args = [object.unit];
+          }
+          dayjsDate = oControl._executeFunctionByName(
+            object.method,
+            dayjsDate,
+            args
+          );
         }
         return dayjsDate;
       },
@@ -69,20 +168,14 @@ sap.ui.define(
         if (oControl.getUtc()) {
           oControl.dayjs.extend(dayjsUTC);
         }
-        return oControl;
       },
 
       _inputToDayjs: function (oControl) {
         if (oControl.getInputFormat() !== "") {
-          if (oControl.getLanguage() !== "") {
-            dayjsDate = oControl.dayjs(
-              oControl.getValue(),
-              oControl.getInputFormat(),
-              oControl.getLanguage()
-            );
-          } else {
-            dayjsDate = oControl.dayjs(oControl.getValue());
-          }
+          dayjsDate = oControl.dayjs(
+            oControl.getValue(),
+            oControl.getInputFormat()
+          );
         } else {
           // no input format, so iso 8601 date string expected
           if (oControl.getValue() !== "") {
@@ -101,46 +194,17 @@ sap.ui.define(
         } else {
           oControl.setText(dayjsDate.format(oControl.getOutputFormat()));
         }
-        return oControl;
       },
 
-      renderer: {
-        apiVersion: 2,
-        /**
-         * create the view layer
-         *
-         * @param {sap.ui.core.RenderManager} oRM Render Manager v2
-         * @param {sap.ui.core.Control} oControl this control
-         */
-        render(oRM, oControl) {
-          // set plugin to parse input format
-          oControl.dayjs.extend(oControl.dayjsCustomParseFormat);
-          // set plugins
-          oControl = oControl._setPlugins(oControl);
-          // get dayjs object
-          var dayjsDate = oControl._inputToDayjs(oControl);
-          // manipulate dayjsobject
-          dayjsDate = oControl._manipulate(dayjsDate, oControl);
-          // set output format
-          oControl = oControl._setOutputFormat(dayjsDate, oControl);
-          // set dayjsobject to control
-          oControl._dayjsObject = dayjsDate;
-          // render control
-          sap.m.TextRenderer.render(oRM, oControl);
-        },
-      },
-
-
-
-      _executeFunctionByName: function(functionName, context /*, args */) {
+      _executeFunctionByName: function (functionName, context /*, args */) {
         var args = Array.prototype.slice.call(arguments, 2)[0];
         var namespaces = functionName.split(".");
         var func = namespaces.pop();
         for (var i = 0; i < namespaces.length; i++) {
-            context = context[namespaces[i]];
+          context = context[namespaces[i]];
         }
         return context[func].apply(context, args);
-    }
+      },
     });
   }
 );
