@@ -4,7 +4,7 @@ sap.ui.define(
     "sap/base/util/ObjectPath",
     "dayjs/dayjs.min",
     "dayjs/plugin/customParseFormat",
-    "dayjs/plugin/utc"
+    "dayjs/plugin/utc",
   ],
   (Text, ObjectPath, dayjs, dayjsCustomParseFormat, dayjsUTC) => {
     return Text.extend("ui5-community.dateformat.DayjsText", {
@@ -51,27 +51,18 @@ sap.ui.define(
          */
 
         render(oRM, oControl) {
-          oControl.handleData(oControl)
+          oControl.handleData(oControl);
           sap.m.TextRenderer.render(oRM, oControl);
         },
       },
 
       init: async function () {
-        this.promise2 = this.loadLocalPluginReturnPromise();
-        this.language = await this.promise2;
-        if (this.language === "undefined") {
-          var userLang = navigator.language || navigator.userLanguage; 
-          this.language = userLang.substring(0, 2).toLowerCase();
-        }
-        if(this.language !== "en") {
-        var locale = sap.ui.require("dayjs/locale/" + this.language);
-        this.dayjs.locale(locale)
-        }
+        await this.loadLocalPluginReturnPromise();
         sap.m.Text.prototype.init.apply(this);
-        this.rerender(this)
+        this.rerender(this);
       },
 
-      handleData : function(oControl) {
+      handleData: function (oControl) {
         oControl.dayjs.extend(oControl.dayjsCustomParseFormat);
         // set plugins
         oControl._setPlugins(oControl);
@@ -85,57 +76,42 @@ sap.ui.define(
         oControl._dayjsObject = dayjsDate;
       },
 
-      loadLocalPluginReturnPromise: function () {
-        var oModel = new sap.ui.model.json.JSONModel();
-        sap.ui.getCore().setModel(oModel, "ui5-community.dateformat.DayjsText");
-        return new Promise((resolve, reject) => {
+       /**
+       * check if flp language is available
+       * if other language than english is set, load locale plugin to dayjs object
+       */
+      loadLocalPluginReturnPromise: async function () {
+        var language = ""
+        await new Promise((resolve, reject) => {
+          var sCurrentLocale = "";
           try {
-            var sCurrentLocale = sap.ui
+            sCurrentLocale = sap.ui
               .getCore()
               .getConfiguration()
               .getLanguage()
               .substring(0, 2)
               .toLowerCase();
-            sap.ui
-              .getCore()
-              .getModel("ui5-community.dateformat.DayjsText")
-              .setProperty("/promiseResolve", resolve);
-            sap.ui
-              .getCore()
-              .getModel("ui5-community.dateformat.DayjsText")
-              .setProperty("/language", sCurrentLocale);
-            sap.ui
-              .getCore()
-              .getModel("ui5-community.dateformat.DayjsText")
-              .setProperty("/promiseReject", reject);
+          } catch (error) {}
+
+          if (sCurrentLocale === "") {
+            var userLang = navigator.language || navigator.userLanguage;
+            sCurrentLocale = userLang.substring(0, 2).toLowerCase();
+          }
+          language = sCurrentLocale
+          if (sCurrentLocale !== "en") {
             sap.ui.require(
               ["dayjs/locale/" + sCurrentLocale.toLowerCase()],
-              function (locale) {
-                var resolve = sap.ui
-                  .getCore()
-                  .getModel("ui5-community.dateformat.DayjsText")
-                  .getProperty("/promiseResolve");
-                var language = sap.ui
-                  .getCore()
-                  .getModel("ui5-community.dateformat.DayjsText")
-                  .getProperty("/language");
-                resolve(language);
-              },
-              function (locale) {
-                var reject = sap.ui
-                  .getCore()
-                  .getModel("ui5-community.dateformat.DayjsText")
-                  .getProperty("/promiseReject");
-                reject();
-              }
+              resolve,
+              reject
             );
-          } catch (error) {
-            console.warn(
-              "language could not be determined, probably not in sap launchpad"
-            );
-            reject(error);
+          } else {
+            resolve();
           }
         });
+        if (language !== "en") {
+          var locale = sap.ui.require("dayjs/locale/" + language);
+          this.dayjs.locale(locale);
+        }
       },
 
       /**
