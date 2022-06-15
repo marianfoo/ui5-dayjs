@@ -57,7 +57,7 @@ More interfaces from dayjs are coming.
 
 Control is inheriting from [`sap.m.Text`](https://ui5.sap.com/#/api/sap.m.Text). So you can use all of the properties and methods of `sap.m.Text`.
 
-### Properties
+### Properties DayjsText
  - value
    - Input of date Format
    - If it´s not ISO 8601, you have to use the inputFormat property
@@ -65,7 +65,7 @@ Control is inheriting from [`sap.m.Text`](https://ui5.sap.com/#/api/sap.m.Text).
    - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
  - outputFormat
    - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
- - `m`anipulate
+ - manipulate
    - currently support is only `Add`,`Subtract`, `Start of Time` and `End of Time`
 ```xml
    <mvc:View ... 
@@ -86,6 +86,35 @@ Control is inheriting from [`sap.m.Text`](https://ui5.sap.com/#/api/sap.m.Text).
           <Label text="End of Quarter" />
           <datejs:DayjsText value="{path: '/date'}" inputFormat="{path: '/inputFormat'}" outputFormat="{path: '/outputFormat'}"
           manipulate="{method: 'endOf',unit: 'quarter'}"/>
+   </mvc:View>
+   ```
+
+### Properties DayjsDiff
+ - date1
+   - Input of date1
+ - date2
+   - Input of date1
+   - If it´s not ISO 8601, you have to use the inputFormat property
+ - inputFormat
+   - List of all available formats from dayjs [here](https://day.js.org/docs/en/parse/string-format)
+ - unit (default: `millisecond`)
+   - list of available unit [here](https://day.js.org/docs/en/display/difference#list-of-all-available-units)
+ - integer (default integer = true)
+   - show difference as integer or float
+ - absolut (default absolut = false)
+   - show value as absolute value
+```xml
+   <mvc:View ... 
+           xmlns:datejs="ui5-community.dayjs"
+           ...>
+          <Label text="Difference in Days" />
+          <datejs:DayjsDiff date1="{path: '/date1'}" date2="{path: '/date2'}" inputFormat="{path: '/inputFormat'}" unit="day" integer="false"/>
+          
+          <Label text="Difference in Milliseconds" />
+          <datejs:DayjsDiff date1="{path: '/date1'}" date2="{path: '/date2'}" inputFormat="{path: '/inputFormat'}"/>
+
+          <Label text="Difference in Milliseconds and absolute" />
+          <datejs:DayjsDiff date1="{path: '/date1'}" date2="{path: '/date2'}" inputFormat="{path: '/inputFormat'}" absolute="true"/>
    </mvc:View>
    ```
 ### Methods
