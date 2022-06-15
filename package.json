@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "dayjs": "^1.10.7"
+    "dayjs": "^1.11.3"
   },
   "devDependencies": {
     "@ui5/cli": "^2.14.6"
